@@ -1,0 +1,34 @@
+org: lbibera
+app: headhuntr
+service: api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  tracing:
+    apiGateway: true
+    lambda: true
+
+resources:
+ Resources:
+  PlatformAPIGateway:
+     Type: AWS::ApiGateway::RestApi
+     Properties:
+       Name: ${sls:stage}-platform-api
+
+ Outputs:
+    apiGatewayRestApiId:
+      Value:
+        Ref: PlatformAPIGateway
+      Export:
+        Name: ${sls:stage}-PlatformAPIGateway-restApiId
+ 
+    apiGatewayRestApiRootResourceId:
+      Value:
+        Fn::GetAtt:
+          - PlatformAPIGateway
+          - RootResourceId
+      Export:
+        Name: ${sls:stage}-PlatformAPIGateway-rootResourceId
