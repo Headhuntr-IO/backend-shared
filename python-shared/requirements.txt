@@ -1,0 +1,6 @@
+requests
+requests_aws4auth
+aws-psycopg2
+redis
+pdfkit
+aws_xray_sdk
