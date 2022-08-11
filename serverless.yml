@@ -1,19 +1,16 @@
 org: lbibera
 app: headhuntr
-service: api
+service: shared
 
 frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: python3.9
   tracing:
     apiGateway: true
-    lambda: true
-
 
 layers:
-  python-shared:
+  pythonshared:
     path: python-shared
     name: ${sls:stage}-python-shared
     description: Common libraries
@@ -22,8 +19,8 @@ layers:
     compatibleArchitectures:
       - x86_64
       - arm64
-    licenseInfo: GPLv3 # optional, a string specifying license information
-    allowedAccounts: # optional, a list of AWS account IDs allowed to access this layer.
+    licenseInfo: GPLv3
+    allowedAccounts:
       - ${aws:accountId}
     retain: true
 
@@ -39,7 +36,7 @@ resources:
       Value:
         Ref: PlatformAPIGateway
       Export:
-        Name: ${sls:stage}-PlatformAPIGateway-restApiId
+        Name: sls-${self:service}-${sls:stage}-PlatformAPIGateway-restApiId
  
     apiGatewayRestApiRootResourceId:
       Value:
@@ -47,4 +44,5 @@ resources:
           - PlatformAPIGateway
           - RootResourceId
       Export:
-        Name: ${sls:stage}-PlatformAPIGateway-rootResourceId
+        Name: sls-${self:service}-${sls:stage}-PlatformAPIGateway-rootResourceId
+        
