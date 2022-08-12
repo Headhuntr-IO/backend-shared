@@ -8,6 +8,15 @@ provider:
   name: aws
   tracing:
     apiGateway: true
+  deploymentBucket:
+    name: ${self:custom.deploymentBucketName}
+    serverSideEncryption: AES256
+
+custom:
+  deploymentBucketName: hhv2.deployment.artifacts
+
+plugins:
+  - serverless-deployment-bucket
 
 layers:
   pythonshared:
@@ -31,18 +40,8 @@ resources:
      Properties:
        Name: ${sls:stage}-platform-api
 
- Outputs:
-    apiGatewayRestApiId:
-      Value:
-        Ref: PlatformAPIGateway
-      Export:
-        Name: sls-${self:service}-${sls:stage}-PlatformAPIGateway-restApiId
- 
-    apiGatewayRestApiRootResourceId:
-      Value:
-        Fn::GetAtt:
-          - PlatformAPIGateway
-          - RootResourceId
-      Export:
-        Name: sls-${self:service}-${sls:stage}-PlatformAPIGateway-rootResourceId
-        
+outputs:
+  S3SharedBucketArtifactsName: ${self:custom.deploymentBucketName}
+  ApiGatewayRestApiId: !Ref PlatformAPIGateway
+  ApiGatewayRestApiRootResourceId: 
+    Fn::GetAtt: [ PlatformAPIGateway, RootResourceId]
